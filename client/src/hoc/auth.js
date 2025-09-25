@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { auth } from '../_actions/user_action';
 
-export default function (SpecificComponent, option, adminRoute = null) {
+export default function userAuth(SpecificComponent, option, adminRoute = null) {
 
     function AuthenticationCheck(props) {
         const dispatch = useDispatch();
@@ -29,7 +29,7 @@ export default function (SpecificComponent, option, adminRoute = null) {
                     }
                 }
             });
-        }, []);
+        }, [dispatch, navigate]);
 
         return <SpecificComponent {...props} />;
     }

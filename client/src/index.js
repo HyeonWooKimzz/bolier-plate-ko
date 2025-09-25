@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import 'antd/dist/antd.css';
-import { legacy_createStore as createStore, applyMiddleware, compose } from 'redux';
+import { legacy_createStore as createStore, applyMiddleware } from 'redux';
 import promiseMiddleware from 'redux-promise';
 import { thunk as ReduxThunk } from 'redux-thunk';
 import Reducer from './_reducers';
