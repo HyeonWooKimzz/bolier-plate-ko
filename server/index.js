@@ -21,10 +21,7 @@ mongoose.connect('mongodb+srv://hwkim:IXsWKkc8okubA1mZ@cluster2.k1zt5ei.mongodb.
 
 app.get('/', (req, res) => res.send('Hello2'))
 
-app.get('/api/hello', (req, res) => {
-  res.send("Hello");
-})
-
+app.get('/api/hello', (req, res) => res.send("Hello"))
 
 app.post('/api/users/register', async (req, res) => {
     // 회원가입 시 필요한 정보들을 Client에서 가져오면
