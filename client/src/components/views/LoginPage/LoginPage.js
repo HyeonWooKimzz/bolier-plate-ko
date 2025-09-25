@@ -1,9 +1,11 @@
 // import { response } from 'express'
 import React, { useState } from 'react'
 import Axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../../_actions/user_action';
 
 function LoginPage() {
-
+    const dispatch = useDispatch();
     const [Email, setEmail] = useState("")
     const [Password, setPassword] = useState("")
 
@@ -15,23 +17,20 @@ function LoginPage() {
         setPassword(event.currentTarget.value)
     }
 
-const onSubmitHandler = (event) => {
+    const onSubmitHandler = (event) => {
         event.preventDefault();
+
+        console.log('Email', Email)
+        console.log('Password', Password)
 
         let body = {
             email: Email,
             password: Password
         }
 
-        Axios.post('/api/user/login', body)
-            .then(response => {
-                console.log(response.data);
-    // 로그인 성공 시 처리 로직 추가
-            })
-            .catch(error => {
-                console.error(error);
-    // 에러 처리
-            });
+        dispatch(loginUser(body))
+
+        
     }
 
     return (
