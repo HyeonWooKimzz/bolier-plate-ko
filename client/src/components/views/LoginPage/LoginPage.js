@@ -29,6 +29,9 @@ function LoginPage(props) {
         dispatch(loginUser(body))
             .then(response => {
                 if(response.payload.loginSuccess) {
+                    if (props.onLogin) {
+                        props.onLogin();
+                    }
                     navigate('/');
                 } else {
                     alert('Error');

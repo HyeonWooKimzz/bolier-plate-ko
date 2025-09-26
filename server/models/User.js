@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken');
 const userSchema = mongoose.Schema({
     name: {
         type: String,
-        maxlength: 50
+        maxlength: 50,
+        unique: 1
     },
     email: {
         type: String,
@@ -61,17 +62,17 @@ userSchema.methods.comparePassword = function(plainPassword) {
     });
 }
 
-userSchema.methods.genToken = function() {
-    return new Promise((resolve, reject) => {
-        var user = this;
-        var token = jwt.sign(user._id.toHexString(), 'secretToken')
-        //user._id + 'secretToken' = token
-        user.token = token
-        user.save() 
-            .then(user => resolve(user))
-            .catch(err => reject(err));
-    });
-}
+userSchema.methods.genToken = async function() {
+  try {
+    const user = this;
+    const token = jwt.sign(user._id.toHexString(), 'secretToken');
+    user.token = token;
+    await user.save();
+    return user;
+  } catch (err) {
+    throw err;
+  }
+};
 
 userSchema.statics.findByToken = async function(token) {
     const userModel = this;

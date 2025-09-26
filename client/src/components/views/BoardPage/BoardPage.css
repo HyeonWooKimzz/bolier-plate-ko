@@ -1,0 +1,92 @@
+.board-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.board-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.board-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.board-form input,
+.board-form textarea {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.board-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.board-form button {
+  width: 120px;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.board-form button:hover {
+  background-color: #45a049;
+}
+
+.board-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.board-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header h3 {
+  margin: 0;
+  color: #222;
+}
+
+.card-header button {
+  background-color: #ff4d4d;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.card-header button:hover {
+  background-color: #e60000;
+}
+
+.timestamp {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #888;
+}
