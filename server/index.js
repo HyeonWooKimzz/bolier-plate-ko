@@ -11,10 +11,13 @@ const app = express();
 const port = 5000;
 
 // MongoDB 연결
-mongoose.connect(
-  'mongodb+srv://hwkim:IXsWKkc8okubA1mZ@cluster2.k1zt5ei.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2'
-).then(() => console.log('✅ MongoDB Connected'))
- .catch(err => console.error('❌ MongoDB Error:', err));
+const config = require('./config/dev');
+mongoose.connect(config.mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('✅ MongoDB Connected'))
+.catch(err => console.error('❌ MongoDB Error:', err));
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
