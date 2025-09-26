@@ -13,7 +13,8 @@ import BoardListPage from './components/views/BoardPage/BoardListPage';
 import BoardWritePage from './components/views/BoardPage/BoardWritePage';
 import BoardDetailPage from './components/views/BoardPage/BoardDetailPage';
 import BoardEditPage from './components/views/BoardPage/BoardEditPage';
-import NavBar from './components/views/NavBar/NavBar'
+import NavBar from './components/views/NavBar/NavBar';
+import Footer from'./components/views/Footer/Footer';
 
 import Auth from './hoc/auth'
 
@@ -61,6 +62,7 @@ function App() {
           <Route path="/board/:id" element={<AuthBoardDetailPage />} />
           <Route path="/board/edit/:id" element={<AuthBoardEditPage />} />
         </Routes>
+        <Footer />
     </Router>
   );
 }
