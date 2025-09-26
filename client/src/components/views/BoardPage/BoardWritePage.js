@@ -6,13 +6,23 @@ function BoardWritePage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim() || !content.trim()) return;
 
     try {
-      const result = await createBoard({ title, content });
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('content', content);
+      if (file) formData.append('file', file);
+
+      const result = await createBoard(formData);
       
       if (result.error) {
         alert(`오류: ${result.error}`);
@@ -43,6 +53,7 @@ function BoardWritePage() {
           placeholder="내용"
           required
         />
+        <input type="file" onChange={handleFileChange} />
         <button type="submit">작성 완료</button>
       </form>
     </div>

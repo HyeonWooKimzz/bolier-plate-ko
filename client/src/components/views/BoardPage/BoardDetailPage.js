@@ -50,6 +50,24 @@ function BoardDetailPage() {
       <p className="writer">작성자: {board.writer}</p>
       <span className="timestamp">{new Date(board.createdAt).toLocaleString()}</span>
 
+      {board.file && (
+        <div style={{ marginTop: '20px' }}>
+          <img
+            src={`http://localhost:3000/uploads/${board.file.filename}`}
+            alt={board.file.originalname}
+            style={{ maxWidth: '100%', maxHeight: 400 }}
+          />
+          <br />
+          <a
+            href={`http://localhost:3000/uploads/${board.file.filename}`}
+            download={board.file.originalname}
+            style={{ display: 'inline-block', marginTop: '10px', textDecoration: 'underline', color: 'blue', cursor: 'pointer' }}
+          >
+            파일 다운로드
+          </a>
+        </div>
+      )}
+
       <div style={{ marginTop: '20px' }}>
         <button onClick={handleEdit} style={{ marginRight: '10px' }}>
           수정

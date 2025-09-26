@@ -1,3 +1,6 @@
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -19,11 +22,29 @@ mongoose.connect(config.mongoURI, {
 .then(() => console.log('✅ MongoDB Connected'))
 .catch(err => console.error('❌ MongoDB Error:', err));
 
+// ===================================
+// 파일 업로드 기능
+// ===================================
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const basename = path.basename(file.originalname, ext);
+    cb(null, basename + '-' + Date.now() + ext);
+  }
+});
+const upload = multer({ storage: storage });
+
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+// uploads 폴더를 정적 폴더로 지정
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ===================================
 // 👤 User 관련 API
@@ -75,8 +96,7 @@ app.get('/api/users/auth', auth, (req, res) => {
     lastname: req.user.lastname,
     role: req.user.role,
     image: req.user.image,
-  })
-  ;
+  });
 });
 
 // 로그아웃
@@ -105,15 +125,31 @@ app.get('/api/boards', async (req, res) => {
 });
 
 // 글 작성
-app.post('/api/boards', auth, async (req, res) => {
-  const { title, content } = req.body;
-  const userName = req.user.name;
+app.post('/api/boards', auth, upload.single('file'), async (req, res) => {
+  try{
+    const { title, content } = req.body;
+    const userName = req.user.name;
 
-  try {
-    const newBoard = new Board({ title, content, writer: userName });
+    let fileInfo = null;
+    if (req.file) {
+      fileInfo = {
+        filename: req.file.filename,
+        originalname: req.file.originalname,
+        path: req.file.path.replace(/\\/g, "/")
+      };
+    }
+
+    const newBoard = new Board({
+      title,
+      content,
+      writer: userName,
+      file: fileInfo,
+    });
+
     await newBoard.save();
     res.status(201).json(newBoard);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: '생성 실패' });
   }
 });
@@ -177,8 +213,6 @@ app.put('/api/boards/:id', auth, async (req, res) => {
     res.status(500).json({ error: '서버 오류' });
   }
 });
-
-
 
 // ===================================
 // 서버 실행

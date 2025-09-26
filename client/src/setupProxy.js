@@ -8,6 +8,13 @@ module.exports = function(app) {
       target: 'http://localhost:5000/api',
       changeOrigin: true,
     })
+  )
+  app.use(
+    '/uploads',
+    createProxyMiddleware({
+      target: 'http://localhost:5000/uploads',
+      changeOrigin: true,
+    })
   );
 };
 
