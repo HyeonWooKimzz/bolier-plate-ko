@@ -40,11 +40,7 @@ export default function userAuth(
                     // 2) 로그인된 사용자 -> 관리자 체크
                     if (adminRoute && !user.isAdmin) {
                         if (mounted) {
-                            // 알림은 한 번만 보이도록 window.__authAlertShown 플래그 사용
-                            if (!window.__authAlertShown) {
-                                window.__authAlertShown = true;
-                                alert("관리자 전용 페이지입니다.");
-                            }
+                            alert("관리자 전용 페이지입니다.");
                             navigate('/');
                         }
                         return;
@@ -53,15 +49,11 @@ export default function userAuth(
                     // 3) role 체크
                     if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
                         if (mounted) {
-                            if (!window.__authAlertShown) {
-                                window.__authAlertShown = true;
-                                alert('접근 권한이 없습니다.');
-                            }
+                            alert('접근 권한이 없습니다.');
                             navigate('/videos');
                         }
                         return;
                     }
-
                     // 모두 통과
                     if (mounted) setAuthorized(true);
 
