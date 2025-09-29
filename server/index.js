@@ -14,7 +14,7 @@ const app = express();
 const port = 5000;
 
 // MongoDB 연결
-const config = require('./config/dev');
+const config = require('./config/key');
 mongoose.connect(config.mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -35,7 +35,17 @@ const storage = multer.diskStorage({
     cb(null, basename + '-' + Date.now() + ext);
   }
 });
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { filesize: 5 * 1024 * 1024 },
+  fileFilter: function (req, file, cb) {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('이미지만 업로드 가능합니다.'))
+    }
+  }
+});
 
 
 // Middleware
@@ -89,7 +99,7 @@ app.post('/api/users/login', async (req, res) => {
 app.get('/api/users/auth', auth, (req, res) => {
   res.status(200).json({
     _id: req.user._id,
-    isAdmin: req.user.role !== 0,
+    isAdmin: req.user.role === 1, // boolean, !== 0 이면 True
     isAuth: true,
     email: req.user.email,
     name: req.user.name,
