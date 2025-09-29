@@ -20,6 +20,9 @@ function NavBar({ isAuth, onLogout }) {
         <li>
           <Link to="/board">📋 게시판</Link>
         </li>
+        <li>
+          <Link to="/videos">🎬 영상 게시판</Link>
+        </li>
         {/* 로그인 상태 */}
         {isAuth && (
           <li>

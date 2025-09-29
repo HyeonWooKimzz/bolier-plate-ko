@@ -9,19 +9,23 @@ import { legacy_createStore as createStore, applyMiddleware } from 'redux';
 import promiseMiddleware from 'redux-promise';
 import { thunk as ReduxThunk } from 'redux-thunk';
 import Reducer from './_reducers';
+import axios from "axios";
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://localhost:5000";
+
 
 const creatStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk)(createStore)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  //<React.StrictMode>
     <Provider store={creatStoreWithMiddleware(Reducer,
       window.__REDUX_DEVTOOLS_EXTENSION__ &&
       window.__REDUX_DEVTOOLS_EXTENSION__()
     )}>
       <App />
     </Provider>
-  </React.StrictMode>
+  //</React.StrictMode>
 );
 
 reportWebVitals();

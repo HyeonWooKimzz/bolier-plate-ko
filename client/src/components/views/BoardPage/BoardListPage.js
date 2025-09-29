@@ -6,6 +6,7 @@ import './BoardPage.css';
 function BoardListPage() {
   const navigate = useNavigate();
   const [boards, setBoards] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     loadBoards();
@@ -27,13 +28,25 @@ function BoardListPage() {
         navigate(`/board/${id}`);
   };
 
+  const filteredBoards = boards.filter(board =>
+    board.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="board-container">
       <h1>📋 간단 게시판</h1>
       <button onClick={handleWriteClick}>글쓰기</button>
 
+      <input
+        type="text"
+        placeholder="검색어를 입력하세요."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ margin: '10px 0', padding: '5px', width: '100%'}}
+      />
+
       <div className="board-list">
-        {boards.map((board) => (
+        {filteredBoards.map((board) => (
           <div
             className="board-card"
             key={board._id}
@@ -43,8 +56,6 @@ function BoardListPage() {
             <div className="card-header">
               <h3>{board.title}</h3>
             </div>
-            <p>{board.content}</p>
-            <p className="writer">작성자:{board.writer}</p>
             <span className="timestamp">
               {new Date(board.createdAt).toLocaleString()}
             </span>

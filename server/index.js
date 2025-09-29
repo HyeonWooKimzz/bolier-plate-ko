@@ -13,6 +13,14 @@ const { Board } = require('./models/Board');
 const app = express();
 const port = 5000;
 
+// cors 설정
+const cors = require('cors');
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
+
+
 // MongoDB 연결
 const config = require('./config/key');
 mongoose.connect(config.mongoURI, {
@@ -46,7 +54,6 @@ const upload = multer({
     }
   }
 });
-
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -86,7 +93,11 @@ app.post('/api/users/login', async (req, res) => {
     }
 
     const tokenUser = await user.genToken();
-    res.cookie("x_auth", tokenUser.token)
+    res.cookie("x_auth", tokenUser.token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false
+    })
        .status(200)
        .json({ loginSuccess: true, userId: tokenUser._id });
        
@@ -223,6 +234,51 @@ app.put('/api/boards/:id', auth, async (req, res) => {
     res.status(500).json({ error: '서버 오류' });
   }
 });
+
+// ===================================
+// 영상 스트리밍
+// ===================================
+app.get('/api/videos', (req, res) => {
+  const dirPath = path.join(__dirname, 'video');
+
+  fs.readdir(dirPath, (err, files) => {
+    if (err) return res.status(500).json({ error: '폴더를 읽을 수 없습니다.' });
+
+    // mp4 파일만 필터링
+    const videos = files.filter(file => file.endsWith('.mp4'));
+    res.json(videos);
+  });
+});
+
+// 영상 스트리밍
+app.get('/api/videos/stream/:filename', (req, res) => {
+  const filePath = path.join(__dirname, 'video', req.params.filename);
+
+  fs.stat(filePath, (err, stats) => {
+    if (err) return res.status(404).json({ error: '파일 없음' });
+
+    const range = req.headers.range;
+    if (!range) return res.status(400).send("Requires Range Header");
+
+    const videoSize = stats.size;
+    const CHUNK_SIZE = 10 ** 6;
+    const start = Number(range.replace(/\D/g, ""));
+    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+
+    const contentLength = end - start + 1;
+    const headers = {
+      "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+      "Accept-Ranges": "bytes",
+      "Content-Length": contentLength,
+      "Content-Type": "video/mp4",
+    };
+
+    res.writeHead(206, headers);
+    const stream = fs.createReadStream(filePath, { start, end });
+    stream.pipe(res);
+  });
+});
+
 
 // ===================================
 // 서버 실행

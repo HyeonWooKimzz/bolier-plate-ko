@@ -15,6 +15,8 @@ import BoardDetailPage from './components/views/BoardPage/BoardDetailPage';
 import BoardEditPage from './components/views/BoardPage/BoardEditPage';
 import NavBar from './components/views/NavBar/NavBar';
 import Footer from'./components/views/Footer/Footer';
+import VideoListPage from './components/views/Video/VideoListPage';
+import VideoPlayerPage from './components/views/Video/VideoPlayerPage';
 
 import Auth from './hoc/auth'
 
@@ -25,6 +27,8 @@ const AuthBoardListPage = Auth(BoardListPage, null);
 const AuthBoardWritePage = Auth(BoardWritePage, true);
 const AuthBoardDetailPage = Auth(BoardDetailPage, true);
 const AuthBoardEditPage = Auth(BoardEditPage, true);
+const AuthVideoListPage = Auth(VideoListPage, null);
+const AuthVideoPlayerPage = Auth(VideoPlayerPage, true, null, [1, 2]);
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);
@@ -54,13 +58,18 @@ function App() {
     <Router>
         <NavBar isAuth={isAuth} onLogout={handleLogout} />
         <Routes>
+          {/* 기본 페이지 */}
           <Route path="/" element={<AuthLandingPage />} />
           <Route path="/login" element={<AuthLoginPage onLogin={handleLogin} />} />
           <Route path="/register" element={<AuthRegisterPage />} />
+          {/* 게시판 */}
           <Route path="/board" element={<AuthBoardListPage />} />
           <Route path="/board/write" element={<AuthBoardWritePage />} />
           <Route path="/board/:id" element={<AuthBoardDetailPage />} />
           <Route path="/board/edit/:id" element={<AuthBoardEditPage />} />
+          {/* 영상 게시판 */}
+          <Route path="/videos" element={<AuthVideoListPage />} />
+          <Route path="/videos/:filename" element={<AuthVideoPlayerPage />} />
         </Routes>
         <Footer />
     </Router>
